@@ -1,0 +1,19 @@
+{{ define "slackBody" }}
+:thunder_cloud_and_rain: {{ len .Alerts.Firing }} Firing. :white_check_mark: {{ len .Alerts.Resolved }} Resolved.
+{{ with (index .Alerts.Firing 0) }}
+{{if .Annotations.runbook_url }}:wrench: <{{ .Annotations.runbook_url }}|Fix>{{else}}:wrench: ~Fix~{{end}}, {{if .SilenceURL }}:no_bell: <{{ .SilenceURL }}|Mute>{{end}}, {{if .DashboardURL }}:bar_chart: <{{ .DashboardURL }}|Dashboard>{{else}}:bar_chart: ~Dashboard~{{end}}, {{if .PanelURL }}:chart_with_upwards_trend: <{{ .PanelURL }}|Panel>{{else}}:chart_with_upwards_trend: ~Panel~{{end}}
+
+{{if .Annotations.summary }}*[{{.Status}}] {{.Annotations.summary}}*{{end}}
+
+{{if .Annotations.description }}{{.Annotations.description}}{{end}}{{end}}
+
+{{/* end  (index .Alerts.Firing 0) */}}
+{{if gt (len  .Alerts.Firing) 0 }}:thunder_cloud_and_rain: *All {{ len .Alerts.Firing }} Firing*
+{{ range .Alerts.Firing }}
+- {{ .Annotations.summary }}{{ end }}{{ end }}
+
+{{if gt (len  .Alerts.Resolved) 0 }}:white_check_mark: *All {{ len .Alerts.Resolved }} Resolved*
+{{ range .Alerts.Resolved }}
+- {{ .Annotations.summary }}{{ end }}{{ end }}
+
+{{ end }} {{/* end  (define slack body) */}}
