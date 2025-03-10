@@ -1,0 +1,32 @@
+{
+  "Alerts": {
+    "Firing": [
+      {
+        "Status": "Firing",
+        "SilenceURL": "https://silence.com",
+        "PanelURL": "https://panel.com",
+        "Annotations": {
+          "runbook_url": "https://runbook.com",
+          "summary": "Alert firing! Bad!",
+          "description": "An alert is firing. Here's a long reason why."
+        },
+        "Labels": {
+          "author": "willyboy"
+        }
+      }
+    ],
+    "Resolved": [
+      {
+        "Annotations": {
+          "runbook_url": "http://runbook.com",
+          "summary": "Alert no longer firing! good!",
+          "description": "An alert is firing. Here's a long reason why"
+        },
+        "PanelURL": "https://panel.com",
+        "Labels": {
+          "author": "willyboy"
+        }
+      }
+    ]
+  }
+}
