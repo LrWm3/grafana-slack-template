@@ -1,19 +1,81 @@
 {{ define "slackBody" }}
-:thunder_cloud_and_rain: {{ len .Alerts.Firing }} Firing. :white_check_mark: {{ len .Alerts.Resolved }} Resolved.
-{{ with (index .Alerts.Firing 0) }}
-{{if .Annotations.runbook_url }}:wrench: <{{ .Annotations.runbook_url }}|Fix>{{else}}:wrench: ~Fix~{{end}}, {{if .SilenceURL }}:no_bell: <{{ .SilenceURL }}|Mute>{{end}}, {{if .DashboardURL }}:bar_chart: <{{ .DashboardURL }}&from={{ .StartsAt.UnixMilli }}-5m&time={{ .StartsAt.UnixMilli }}&time.window=600000{{ range .Labels.SortedPairs }}&var-{{ .Name }}={{ .Value }}{{ end }}|Dashboard>{{ else }}:bar_chart: ~Dashboard~{{end}}, {{ if .PanelURL }}:chart_with_upwards_trend: <{{ .PanelURL }}&from={{ .StartsAt.UnixMilli }}-5m&time={{ .StartsAt.UnixMilli }}&time.window=600000{{ range .Labels.SortedPairs }}&var-{{ .Name }}={{ .Value }}{{ end }}|Panel>{{else}}:chart_with_upwards_trend: ~Panel~{{end}}, {{if .Annotations.alert_url }}:pencil: <{{ .Annotations.alert_url }}|Edit Alert>{{else}}:pencil: ~Edit Alert~{{end}}
+⛈️ {{ len .Alerts.Firing }} Firing. ✅ {{ len .Alerts.Resolved }} Resolved.
+{{- if gt (len .Alerts.Firing) 0 }}{{ with (index .Alerts.Firing 0) }}
 
-{{if .Annotations.summary }}*[{{.Status}}] {{.Annotations.summary}}*{{end}}
+{{ if .Annotations.runbook_url -}}
+    🔧 <{{ .Annotations.runbook_url }}|Fix>
+  {{- else -}}
+    🔧 ~Fix~
+  {{- end -}},
+  {{- if .SilenceURL -}}
+    🔕 <{{ .SilenceURL }}|Mute>
+  {{- end -}},
+  {{- if .DashboardURL -}}
+    📊 <{{ .DashboardURL }}&from={{ .StartsAt.UnixMilli }}-5m&time={{ .StartsAt.UnixMilli }}&time.window=600000
+    {{- range .Labels.SortedPairs -}}
+      &var-{{ .Name }}={{ .Value }}
+    {{- end -}}|Dashboard>
+  {{- else -}}
+    📊 ~Dashboard~
+  {{- end -}},
+  {{- if .PanelURL -}}
+    📈 <{{ .PanelURL }}&from={{ .StartsAt.UnixMilli }}-5m&time={{ .StartsAt.UnixMilli }}&time.window=600000
+    {{- range .Labels.SortedPairs -}}
+      &var-{{ .Name }}={{ .Value }}
+    {{- end -}}|Panel>
+  {{- else -}}
+    📈 ~Panel~
+  {{- end -}},
+  {{- if .Annotations.alert_url -}}
+    ✏️ <{{ .Annotations.alert_url }}|Edit Alert>
+  {{- else -}}
+    ✏️ ~Edit Alert~
+  {{- end }}
 
-{{if .Annotations.description }}{{.Annotations.description}}{{end}}{{end}}
 
-{{/* end  (index .Alerts.Firing 0) */}}
-{{if gt (len  .Alerts.Firing) 0 }}:thunder_cloud_and_rain: *All {{ len .Alerts.Firing }} Firing*
-{{ range .Alerts.Firing }}
-- {{ .Annotations.summary }}{{ end }}{{ end }}
+{{ if .Annotations.summary -}}
+  *[{{ .Status }}] {{ .Annotations.summary }}*
+{{- end }}
 
-{{if gt (len  .Alerts.Resolved) 0 }}:white_check_mark: *All {{ len .Alerts.Resolved }} Resolved*
-{{ range .Alerts.Resolved }}
-- {{ .Annotations.summary }}{{ end }}{{ end }}
+{{ if .Labels.author -}}
+  *author:* {{ .Labels.author }}
+{{ else -}}
+    *author:* Up for adoption 🥺
+{{ end }}
+
+{{ if .Annotations.description -}}
+  {{ .Annotations.description }}
+{{- end }}
+{{- end }}{{/* end with (index .Alerts.Firing 0) */}}
+{{- end }}{{/* end gt (len .Alerts.Firing) 0 */}}
+{{ if gt (len .Alerts.Firing) 0 }}
+
+  ⛈️ *All {{ len .Alerts.Firing }} Firing*
+  {{- range .Alerts.Firing }}
+
+- {{ .Annotations.summary }} {{ if .PanelURL -}}
+    (<{{ .PanelURL }}&from={{ .StartsAt.UnixMilli }}-5m&time={{ .StartsAt.UnixMilli }}&time.window=600000
+    {{- range .Labels.SortedPairs -}}
+      &var-{{ .Name }}={{ .Value }}
+    {{- end -}}|ref>)
+    {{- end }}
+
+  {{- end }}
+{{ end -}}
+{{ if gt (len .Alerts.Resolved) 0 }}
+
+  ✅ *All {{ len .Alerts.Resolved }} Resolved*
+  {{- range .Alerts.Resolved }}
+
+- {{ .Annotations.summary }} {{ if .PanelURL -}}
+    (<{{ .PanelURL }}&from={{ .StartsAt.UnixMilli }}-5m&time={{ .StartsAt.UnixMilli }}&time.window=600000
+    {{- range .Labels.SortedPairs -}}
+      &var-{{ .Name }}={{ .Value }}
+    {{- end -}}|ref>)
+    {{- end }}
+
+  {{- end }}
+{{- end }}
+
 
 {{ end }} {{/* end  (define slack body) */}}
