@@ -10,6 +10,9 @@ This is a grafana slack template that is a bit better than the default.
 
 - Includes links to runbook, panel, dashboard, if present
 - When multiple alerts trigger at once, extra alerts are listed with only the summary.
+- Each alert line item in the group includes a link to the related panel, if present
+- Links to dashboard and panel with the correct time, showing 10 minutes surrounding the alert trigger
+- Links to dashboard and panel with the labels provided by the alert, allowing for the automatic population of variables for dashboard and alert links if they match.
 
 ## Usage
 
@@ -35,6 +38,10 @@ Add the following for `Text Body`
 
 It will now use this custom template for slack instead of the default one.
 
+## Alert backlinks
+
+The alert backlink is currently not automatically populated. To backlink the alert
+
 ## Including variables in your alerts
 
 To include variables in your alerts, you can extract labels during your queries and then use them like so:
@@ -44,3 +51,13 @@ Example Summary field:
 [Critical] [{{ $labels.environment }}] Host[{{ $labels.Host_IP }}] appears to be offline!
 ```
 
+## TODO
+
+Make use of the following:
+
+
+| Field | Type | Description | Purpose |
+|--|--|--|--|
+| EndsAt | time.Time |	Only set if the end time of an alert is known. Otherwise set to a configurable timeout period from the time since the last alert was received. | Show range of time for a resolved alert in panel & dashboard link instead. |
+| GeneratorURL | string | A back link to Grafana or external Alertmanager. | Automatic alert backlinks so 'alert_url' is not a required, manually added label. |
+| Fingerprint | string | Fingerprint that can be used to identify the alert. | Automatic alert backlinks so 'alert_url' is not a required, manually added label. |
