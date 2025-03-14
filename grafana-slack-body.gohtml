@@ -68,10 +68,15 @@
   {{- range .Alerts.Resolved }}
 
 - {{ .Annotations.summary }} {{ if .PanelURL -}}
-    (<{{ .PanelURL }}&from={{ .StartsAt.UnixMilli }}-5m&time={{ .StartsAt.UnixMilli }}&time.window=600000
-    {{- range .Labels.SortedPairs -}}
-      &var-{{ .Name }}={{ .Value }}
-    {{- end -}}|ref>)
+    (<{{ .PanelURL }}&from={{ .StartsAt.UnixMilli }}
+      {{- if .EndsAt -}}
+        &to={{ .EndsAt.UnixMilli }}
+      {{- else -}}
+        -5m&time={{ .StartsAt.UnixMilli }}&time.window=600000
+      {{- end -}}
+      {{- range .Labels.SortedPairs -}}
+        &var-{{ .Name }}={{ .Value }}
+      {{- end -}}|ref>)
     {{- end }}
 
   {{- end }}
