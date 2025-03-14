@@ -47,11 +47,3 @@ Example Summary field:
 ```
 [Critical] [{{ $labels.environment }}] Host[{{ $labels.Host_IP }}] appears to be offline!
 ```
-
-## TODO
-
-Make use of the following:
-
-| Field | Type | Description | Purpose |
-|--|--|--|--|
-| EndsAt | time.Time |	Only set if the end time of an alert is known. Otherwise set to a configurable timeout period from the time since the last alert was received. | Show range of time for a resolved alert in panel & dashboard link instead. |
