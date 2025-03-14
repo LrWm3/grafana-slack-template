@@ -26,10 +26,10 @@
   {{- else -}}
     📈 ~Panel~
   {{- end -}},
-  {{- if .Annotations.alert_url -}}
-    ✏️ <{{ .Annotations.alert_url }}|Edit Alert>
+  {{- if .GeneratorURL -}}
+    🕵️ <{{ .GeneratorURL }}|View Alert>
   {{- else -}}
-    ✏️ ~Edit Alert~
+    🕵️ ~View Alert~
   {{- end }}
 
 
